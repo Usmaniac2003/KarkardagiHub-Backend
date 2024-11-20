@@ -1,0 +1,190 @@
+
+---
+
+### **1. User Authentication and Profiles**
+
+- **POST /api/auth/register**  
+  Register a new user.
+
+- **POST /api/auth/login**  
+  Log in a user and return a JWT token.
+
+- **GET /api/users/:userId**  
+  Get user profile by user ID.
+
+- **PUT /api/users/:userId**  
+  Update user profile, including movie preferences (e.g., favorite genres, actors).
+
+- **POST /api/users/:userId/wishlist**  
+  Add a movie to the user’s wishlist.
+
+- **GET /api/users/:userId/wishlist**  
+  Get the user’s wishlist.
+
+---
+
+### **2. Movie Database Management (Admin-Only Operations)**
+
+- **POST /api/movies**  
+  Add a new movie to the database (Admin only).
+
+- **PUT /api/movies/:movieId**  
+  Update movie details by movie ID (Admin only).
+
+- **DELETE /api/movies/:movieId**  
+  Delete a movie by movie ID (Admin only).
+
+- **GET /api/movies/:movieId**  
+  Get detailed information about a movie, including trivia, goofs, and soundtrack information.
+
+- **GET /api/movies**  
+  Get a list of movies, sorted by release date or popularity.
+
+- **GET /api/actors/:actorId**  
+  Get detailed profile of an actor, including biography, filmography, and awards.
+
+- **GET /api/movies/parental-guidance/:movieId**  
+  Get age ratings and parental guidance details for a movie.
+
+---
+
+### **3. Rating and Review Module**
+
+- **POST /api/movies/:movieId/rate**  
+  Rate a movie (scale 1-5) by a user.
+
+- **GET /api/movies/:movieId/ratings**  
+  Get all ratings for a movie, showing the average rating.
+
+- **POST /api/movies/:movieId/reviews**  
+  Add a review for a movie.
+
+- **PUT /api/movies/:movieId/reviews/:reviewId**  
+  Update a user’s review for a movie.
+
+- **GET /api/movies/:movieId/reviews**  
+  Get reviews for a movie, showing review highlights (top-rated or most-discussed).
+
+---
+
+### **4. Recommendation System**
+
+- **GET /api/recommendations/personalized**  
+  Get personalized movie recommendations based on the user’s preferences and activity.
+
+- **GET /api/movies/:movieId/similar**  
+  Get similar movies based on genre, director, or popularity.
+
+- **GET /api/recommendations/trending**  
+  Get trending movies based on user activity.
+
+- **GET /api/recommendations/top-rated**  
+  Get top-rated movies based on ratings.
+
+---
+
+### **5. Watchlist and Custom Lists**
+
+- **POST /api/users/:userId/lists**  
+  Create a custom list (e.g., "Best Horror Movies").
+
+- **GET /api/users/:userId/lists**  
+  Get all custom lists created by a user.
+
+- **POST /api/users/:userId/lists/:listId/movies**  
+  Add a movie to a custom list.
+
+- **GET /api/users/:userId/lists/:listId**  
+  Get movies in a specific custom list.
+
+- **POST /api/users/:userId/lists/:listId/follow**  
+  Follow a custom list created by another user.
+
+- **GET /api/lists/:listId/followers**  
+  Get users following a specific list.
+
+---
+
+### **6. Search, Filter, and Advanced Filtering**
+
+- **GET /api/search**  
+  Search for movies by title, genre, director, or actors.
+
+- **GET /api/movies**  
+  Retrieve movies with basic filters by ratings, popularity, and release year.
+
+- **GET /api/movies/advanced-filter**  
+  Advanced filtering by release decade, country, language, keywords.
+
+- **GET /api/movies/top-lists/month**  
+  Get top movies of the month.
+
+- **GET /api/movies/top-lists/genre**  
+  Get top movies by genre.
+
+---
+
+### **7. Upcoming Releases and Notifications**
+
+- **GET /api/movies/upcoming**  
+  Get a list of upcoming movies with release dates.
+
+- **POST /api/users/:userId/notifications/reminder**  
+  Set a reminder for upcoming releases or trailers.
+
+- **GET /api/users/:userId/notifications**  
+  Get user notifications, such as new releases in favorite genres.
+
+---
+
+### **8. News, Articles, and Industry Updates**
+
+- **GET /api/news**  
+  Get a list of news and articles related to movies, actors, and industry updates.
+
+- **GET /api/news/:newsId**  
+  Get detailed information about a specific news article.
+
+---
+
+### **9. Box Office Information and Awards**
+
+- **GET /api/movies/:movieId/box-office**  
+  Get box office details for a movie, such as opening weekend earnings and total revenue.
+
+- **GET /api/movies/:movieId/awards**  
+  Get awards and nominations for a movie or actors associated with it.
+
+---
+
+### **10. User Community and Discussion Boards**
+
+- **POST /api/community/threads**  
+  Create a new discussion thread.
+
+- **GET /api/community/threads**  
+  Get all discussion threads.
+
+- **POST /api/community/threads/:threadId/posts**  
+  Add a post to a discussion thread.
+
+- **GET /api/community/threads/:threadId/posts**  
+  Get posts in a specific discussion thread.
+
+- **DELETE /api/community/threads/:threadId**  
+  Delete a discussion thread (Admin only).
+
+---
+
+### **11. Admin Operations**
+
+- **GET /api/admin/movies**  
+  Get all movies in the database (Admin only).
+
+- **GET /api/admin/statistics**  
+  Get site statistics like most popular movies and user activity.
+
+- **GET /api/admin/trending-genres**  
+  Get insights on trending genres, the most searched actors, and user engagement patterns.
+
+---
