@@ -1,0 +1,75 @@
+#GIT COMMANDS#
+
+Git - Version Control 
+GitHub - Online Repository
+
+Hania Local Repository - Website.
+
+Github - Hania Website, 
+
+-Maadehah can see it,
+
+Maadehah forks hania ki repository
+Maadehah clones it
+
+
+push  
+pull
+
+
+Remote Repository
+Origin : Copy of Hania Repository
+Upstream : Hania Website
+
+
+Steps
+1)Upstream : Code Bhejna origin se
+2)Upstream : Code lana he origin ke andar
+
+How to do Step 1:
+Code changes
+git add . 
+//Locally commit
+git commit -m "whatever message"
+//Online commit
+git push origin master
+//Code Bhejna origin se
+Go to Github Create Pull Request
+
+step one is done.
+
+
+How to do Step 2:
+git add remote upstream url (one-time step)
+git fetch upstream master
+git pull upstream master
+Code changes
+git add . 
+//Locally commit
+git commit -m "whatever message"
+//Online commit
+git push origin master
+
+
+
+
+
+
+
+
+
+
+//Locally
+
+git status  //Gives status of the repository
+git add . // Adds all files in the staging area
+git add filename // Adds specific files in the staging area
+git commit -m "Commit Message"   //Commit your changes in code.
+git clone url //Clones the repository
+
+//Local changes
+
+
+
+
+Unstaged -> Staged -> Committed -> Online Repo

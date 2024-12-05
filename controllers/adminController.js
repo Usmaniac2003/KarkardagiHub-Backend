@@ -1,89 +1,65 @@
-const Movie = require('../models/Movie');
 const User = require('../models/User');
-const Review = require('../models/Review');
 
-// Admin - Get all movies in the database
-exports.getAllMovies = async (req, res) => {
+// Add User
+exports.addUser = async (req, res) => {
+    const { username, email, password, role } = req.body;
     try {
-        const movies = await Movie.find().sort({ releaseDate: -1 });  // Sort by latest release date
-        res.json(movies);
+        const newUser = new User({ username, email, password, role });
+        await newUser.save();
+        res.status(201).json({ message: 'User added successfully', user: newUser });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching movies', error });
+        res.status(500).json({ message: 'Error adding user', error });
     }
 };
 
-// Admin - Add a new movie to the database
-exports.addMovie = async (req, res) => {
+// Update User
+exports.updateUser = async (req, res) => {
+    const userId = req.params.id;
+    const updates = req.body;
     try {
-        const movie = new Movie(req.body);
-        await movie.save();
-        res.status(201).json({ message: 'Movie added successfully', movie });
-    } catch (error) {
-        res.status(500).json({ message: 'Error adding movie', error });
-    }
-};
-
-// Admin - Update an existing movie
-exports.updateMovie = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const movie = await Movie.findByIdAndUpdate(id, req.body, { new: true });
-        if (!movie) {
-            return res.status(404).json({ message: 'Movie not found' });
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        res.json({ message: 'Movie updated successfully', movie });
+        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating movie', error });
+        res.status(500).json({ message: 'Error updating user', error });
     }
 };
 
-// Admin - Delete a movie from the database
-exports.deleteMovie = async (req, res) => {
+// Delete User
+exports.deleteUser = async (req, res) => {
+    const userId = req.params.id;
     try {
-        const { id } = req.params;
-        const movie = await Movie.findByIdAndDelete(id);
-        if (!movie) {
-            return res.status(404).json({ message: 'Movie not found' });
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        res.json({ message: 'Movie deleted successfully' });
+        res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting movie', error });
+        res.status(500).json({ message: 'Error deleting user', error });
     }
 };
 
-// Admin - Get site statistics (e.g., total users, total movies)
-exports.getStatistics = async (req, res) => {
+// View User List
+exports.viewUsers = async (req, res) => {
+    const { search, role } = req.query;
+    const filter = {};
+
+    if (search) {
+        filter.$or = [
+            { username: new RegExp(search, 'i') },
+            { email: new RegExp(search, 'i') }
+        ];
+    }
+    if (role) {
+        filter.role = role;
+    }
+
     try {
-        const totalUsers = await User.countDocuments();
-        const totalMovies = await Movie.countDocuments();
-        const totalReviews = await Review.countDocuments();  // Assuming a Review model exists
-
-        res.json({
-            totalUsers,
-            totalMovies,
-            totalReviews,
-        });
+        const users = await User.find(filter);
+        res.status(200).json({ message: 'Users retrieved successfully', users });
     } catch (error) {
-        console.error('Error fetching statistics:', error); // Log the error
-        res.status(500).json({ message: 'Error fetching statistics', error: error.message });
+        res.status(500).json({ message: 'Error retrieving users', error });
     }
 };
-
-// Admin - Get trending genres based on user activity
-exports.getTrendingGenres = async (req, res) => {
-    try {
-        const genreCounts = await Movie.aggregate([
-            { $unwind: '$genre' },  // Split genre array into individual documents
-            { $group: { _id: '$genre', count: { $sum: 1 } } },  // Group by genre and count
-            { $sort: { count: -1 } },  // Sort by count in descending order
-            { $limit: 10 },  // Limit to top 10 trending genres
-        ]);
-
-        res.json(genreCounts);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching trending genres', error });
-    }
-};
-
-
-
