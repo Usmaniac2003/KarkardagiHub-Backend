@@ -1,13 +1,36 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Task = require('../models/Task');
+const Project = require('../models/Project');
+const Notification = require('../models/Notification');
 
 // Add User
 exports.addUser = async (req, res) => {
     const { username, email, password, role } = req.body;
+
+    // Validate the input (optional but recommended)
+    if (!username || !email || !password || !role) {
+        return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
     try {
-        const newUser = new User({ username, email, password, role });
+        // Hash the password with bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds, you can adjust it
+
+        // Create a new user with the hashed password
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword, // Store the hashed password
+            role
+        });
+
+        // Save the new user to the database
         await newUser.save();
+
         res.status(201).json({ message: 'User added successfully', user: newUser });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Error adding user', error });
     }
 };
@@ -44,22 +67,26 @@ exports.deleteUser = async (req, res) => {
 // View User List
 exports.viewUsers = async (req, res) => {
     const { search, role } = req.query;
-    const filter = {};
-
+    const {filters} = req.params;
+  
     if (search) {
-        filter.$or = [
-            { username: new RegExp(search, 'i') },
-            { email: new RegExp(search, 'i') }
-        ];
+        filters.$or = [
+        { username: new RegExp(search, 'i') },  // Case-insensitive search for username
+        { email: new RegExp(search, 'i') }     // Case-insensitive search for email
+      ];
     }
+  
     if (role) {
-        filter.role = role;
+        filters.role = role;  // Filter by role if provided
     }
-
+  
     try {
-        const users = await User.find(filter);
-        res.status(200).json({ message: 'Users retrieved successfully', users });
+      const users = await User.find(filters);
+      res.status(200).json({ message: 'Users retrieved successfully', users });
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving users', error });
+      res.status(500).json({ message: 'Error retrieving users', error });
     }
-};
+  };
+  
+
+
