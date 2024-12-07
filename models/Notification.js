@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//error log 
 const notificationSchema = new Schema({
   title: { type: String, required: true },
   message: { type: String, required: true },
@@ -11,3 +12,5 @@ const notificationSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Notification', notificationSchema);
+
+

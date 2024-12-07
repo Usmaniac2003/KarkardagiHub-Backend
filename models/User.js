@@ -6,13 +6,14 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, required: true, default: "user" },
-    department: { type: String },
+
     status: { type: String, enum: ['active', 'inactive'], default: 'active' },
     manager_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },  // Reference to the user's manager
+    team_number: { type: Number,default: 0} ,
     total_points_earned: { type: Number, default: 0 },
     badges: [{ type: String }],  // List of badges awarded
     reward_lists: [{ type: String }],  // List of rewards
-    attendance_count: { type: Number, default: 0 }  // New field to track attendance count
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
