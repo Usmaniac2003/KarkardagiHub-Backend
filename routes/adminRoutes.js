@@ -14,4 +14,5 @@ router.delete('/delete-user/:id', adminController.deleteUser);
 // View User List
 router.get('/users', adminController.viewUsers);
 
+
 module.exports = router;
