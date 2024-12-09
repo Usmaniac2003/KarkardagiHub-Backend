@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 
+
 // Add User
 router.post('/add-user', adminController.addUser);
 // Update User
@@ -25,7 +26,12 @@ router.get('/projects', adminController.viewProjects);
 router.get('/projects/:id', adminController.viewProjectById);
 
 //Dashboard
-
 router.get('/dashboard', adminController.getDashboardData);
 
+//Notifications
+router.get('/getAllNotifications', adminController.getAllNotifications);
+router.post('/add-notifications', adminController.addNotifications);
+
 module.exports = router;
+
+
