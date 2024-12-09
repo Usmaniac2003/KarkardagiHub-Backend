@@ -368,4 +368,4 @@ exports.getDashboardData = async (req, res) => {
   }
 };
 
-//Notifications
+//Mailing

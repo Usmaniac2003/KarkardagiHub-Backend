@@ -33,10 +33,21 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: 'http://localhost:5173', // Frontend URL
-    credentials: true,  // Allow cookies
-}));
+const allowedOrigins = [
+    'https://karkardagihub.netlify.app',  // Without trailing slash
+    'http://localhost:5173'
+  ];
+  
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);  // Allow the request
+      } else {
+        callback(new Error('Not allowed by CORS'), false);  // Reject the request
+      }
+    },
+    credentials: true,  // Allow credentials (cookies)
+  }));
 app.use(bodyParser.json());
 app.use("/api", apiRouter);
 app.use('/api/auth', authRoutes);
