@@ -46,18 +46,44 @@ const getTaskById = async (req, res) => {
     }
 };
 
-// Update a task
 const updateTask = async (req, res) => {
-    try {
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedTask) {
-            return res.status(404).json({ error: 'Task not found.' });
-        }
-        res.status(200).json(updatedTask);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Error updating task.', details: error.message });
-    }
+  try {
+      // Validate request body
+      if (!req.body || Object.keys(req.body).length === 0) {
+          return res.status(400).json({ error: 'Request body is empty.' });
+      }
+
+      const updatedTask = await Task.findByIdAndUpdate(
+          req.params.id, 
+          req.body, 
+          { new: true, runValidators: true }
+      );
+
+      if (!updatedTask) {
+          return res.status(404).json({ error: 'Task not found.' });
+      }
+
+      // Generate notification only if status is completed
+      if (req.body.status === 'Completed' && req.user && req.user._id) {
+          try {
+              const notificationType = new Date(updatedTask.due_date) >= new Date() 
+                  ? 'Submission' 
+                  : 'Deadline';
+              await createNotification(updatedTask._id, req.user._id, notificationType);
+          } catch (notificationError) {
+              console.error('Error creating notification:', notificationError);
+              // Continue with task update even if notification fails
+          }
+      }
+
+      res.status(200).json(updatedTask);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ 
+          error: 'Error updating task.', 
+          details: error.message 
+      });
+  }
 };
 
 // Delete a task

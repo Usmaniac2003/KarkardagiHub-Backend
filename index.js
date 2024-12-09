@@ -13,6 +13,8 @@ const Chat = require('./models/Chat');
 const userRoutes = require('./routes/userRoutes');
 const http = require('http');
 const socketIo = require('socket.io');
+const activityLogRoutes = require('./routes/activityLogRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 // Configuring Server
 const app = express(); // Initialize an Express application
@@ -41,6 +43,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api', meRoutes);
 app.use("/tasks", taskRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/activity', activityLogRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get("/",(req,res) => {
     res.send("Welcome to the Movie Streaming API!");
