@@ -24,4 +24,8 @@ router.get('/projects', adminController.viewProjects);
 // View a single project by ID
 router.get('/projects/:id', adminController.viewProjectById);
 
+//Dashboard
+
+router.get('/dashboard', adminController.getDashboardData);
+
 module.exports = router;

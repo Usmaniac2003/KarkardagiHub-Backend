@@ -185,3 +185,181 @@ exports.viewProjectById = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving project', error });
   }
 };
+
+// Dashboard
+// Get total number of Managers
+exports.getTotalManagers = async (req, res) => {
+  try {
+    const managers = await User.countDocuments({ role: 'manager' });
+    res.json({ totalManagers: managers });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching total managers' });
+  }
+};
+
+// Get total number of Staff (Non-manager users)
+exports.getTotalStaff = async (req, res) => {
+  try {
+    const staff = await User.countDocuments({ role: 'user' });
+    res.json({ totalStaff: staff });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching total staff' });
+  }
+};
+
+// Get total number of Active Users
+exports.getActiveUsers = async (req, res) => {
+  try {
+    const activeUsers = await User.countDocuments({ status: 'active' });
+    res.json({ totalActiveUsers: activeUsers });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching active users' });
+  }
+};
+
+// Get total number of Projects
+exports.getTotalProjects = async (req, res) => {
+  try {
+    const totalProjects = await Project.countDocuments();
+    res.json({ totalProjects });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching total projects' });
+  }
+};
+
+// Get total number of Active Projects
+exports.getActiveProjects = async (req, res) => {
+  try {
+    const activeProjects = await Project.countDocuments({ status: 'Active' });
+    res.json({ totalActiveProjects: activeProjects });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching active projects' });
+  }
+};
+
+// Get total number of Tasks
+exports.getTotalTasks = async (req, res) => {
+  try {
+    const totalTasks = await Task.countDocuments();
+    res.json({ totalTasks });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching total tasks' });
+  }
+};
+
+// Get total number of Completed Tasks
+exports.getCompletedTasks = async (req, res) => {
+  try {
+    const completedTasks = await Task.countDocuments({ status: 'Completed' });
+    res.json({ totalCompletedTasks: completedTasks });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching completed tasks' });
+  }
+};
+
+// Get total number of Pending Reviews
+exports.getPendingReviews = async (req, res) => {
+  try {
+    const pendingReviews = await ReviewSession.countDocuments({ status: 'Pending' });
+    res.json({ totalPendingReviews: pendingReviews });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching pending reviews' });
+  }
+};
+
+// Get total number of Users with Badges
+exports.getUsersWithBadges = async (req, res) => {
+  try {
+    const usersWithBadges = await User.countDocuments({ badges: { $ne: [] } });
+    res.json({ totalUsersWithBadges: usersWithBadges });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users with badges' });
+  }
+};
+const getTotalManagers = async () => {
+  // Replace with actual logic to get total managers from your DB
+  return 50; // Example static value
+};
+
+const getTotalStaff = async () => {
+  // Replace with actual logic to get total staff from your DB
+  return 100; // Example static value
+};
+
+const getActiveUsers = async () => {
+  // Replace with actual logic to get active users
+  return 80; // Example static value
+};
+
+const getTotalProjects = async () => {
+  // Replace with actual logic to get total projects
+  return 30; // Example static value
+};
+
+const getActiveProjects = async () => {
+  // Replace with actual logic to get active projects
+  return 15; // Example static value
+};
+
+const getTotalTasks = async () => {
+  // Replace with actual logic to get total tasks
+  return 120; // Example static value
+};
+
+const getCompletedTasks = async () => {
+  // Replace with actual logic to get completed tasks
+  return 85; // Example static value
+};
+
+const getPendingReviews = async () => {
+  // Replace with actual logic to get pending reviews
+  return 10; // Example static value
+};
+
+const getUsersWithBadges = async () => {
+  // Replace with actual logic to get users with badges
+  return 20; // Example static value
+};
+
+exports.getDashboardData = async (req, res) => {
+  try {
+    // Fetch all metrics concurrently
+    const [
+      totalManagers,
+      totalStaff,
+      totalActiveUsers,
+      totalProjects,
+      totalActiveProjects,
+      totalTasks,
+      totalCompletedTasks,
+      pendingReviews,
+      usersWithBadges
+    ] = await Promise.all([
+      getTotalManagers(),
+      getTotalStaff(),
+      getActiveUsers(),
+      getTotalProjects(),
+      getActiveProjects(),
+      getTotalTasks(),
+      getCompletedTasks(),
+      getPendingReviews(),
+      getUsersWithBadges()
+    ]);
+
+    // Return the collected data as a response
+    res.json({
+      totalManagers,
+      totalStaff,
+      totalActiveUsers,
+      totalProjects,
+      totalActiveProjects,
+      totalTasks,
+      totalCompletedTasks,
+      pendingReviews,
+      usersWithBadges
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error.message);
+    res.status(500).json({ message: "An error occurred while fetching dashboard data." });
+  }
+};
